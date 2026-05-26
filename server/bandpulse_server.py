@@ -10,7 +10,7 @@ app = Flask(__name__)
 _lock = threading.Lock()
 _es = None
 
-MODELS_DIR = os.path.expanduser("~/lupin_models")
+MODELS_DIR = os.path.expanduser("~/bandpulse_models")
 
 def get_es():
     global _es
