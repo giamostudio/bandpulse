@@ -49,19 +49,34 @@ echo "→ Downloading server..."
 curl -fsSL "https://raw.githubusercontent.com/giamostudio/bandpulse/main/server/bandpulse_server.py" \
   -o "$INSTALL_DIR/bandpulse_server.py"
 
-echo "→ Creating launcher (start.command)..."
-cat > "$INSTALL_DIR/start.command" << 'LAUNCHER'
-#!/bin/bash
-clear
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  BANDPULSE Server"
-echo "  Running at http://localhost:5555"
-echo "  Keep this window open."
-echo "  Press Ctrl+C to stop."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"$HOME/bandpulse/env/bin/python" "$HOME/bandpulse/bandpulse_server.py"
-LAUNCHER
-chmod +x "$INSTALL_DIR/start.command"
+echo "→ Setting up auto-start at login..."
+PLIST="$HOME/Library/LaunchAgents/com.bandpulse.server.plist"
+cat > "$PLIST" << PLISTEOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.bandpulse.server</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$INSTALL_DIR/env/bin/python</string>
+        <string>$INSTALL_DIR/bandpulse_server.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/bandpulse.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/bandpulse.log</string>
+</dict>
+</plist>
+PLISTEOF
+launchctl unload "$PLIST" 2>/dev/null || true
+launchctl load "$PLIST"
+echo "   Auto-start enabled — server runs at every login"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
