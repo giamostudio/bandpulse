@@ -525,6 +525,16 @@
     gap: 6px;
   }
 
+  .lang-btn {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); padding: 4px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif; letter-spacing: .5px;
+    transition: all .15s;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
   @media (max-width: 640px) {
     nav { padding: 16px 20px; }
     .nav-links { display: none; }
@@ -538,11 +548,20 @@
 <nav>
   <a class="nav-logo" href="#">Bandpulse</a>
   <ul class="nav-links">
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#install">Install</a></li>
-    <li><a href="https://github.com/yourusername/bandpulse" target="_blank">GitHub</a></li>
-    <li><a href="#donate" class="nav-cta">Support</a></li>
+    <li><a href="#how" data-i18n="nav_how">How it works</a></li>
+    <li><a href="#features" data-i18n="nav_features">Features</a></li>
+    <li><a href="#install" data-i18n="nav_install">Install</a></li>
+    <li><a href="https://github.com/giamostudio/bandpulse" target="_blank">GitHub</a></li>
+    <li><a href="#donate" class="nav-cta" data-i18n="nav_support">Support</a></li>
+    <li>
+      <div style="display:flex;gap:4px;align-items:center">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('it')">IT</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" onclick="setLang('fr')">FR</button>
+        <button class="lang-btn" onclick="setLang('de')">DE</button>
+      </div>
+    </li>
   </ul>
 </nav>
 
@@ -789,5 +808,250 @@ document.querySelector('details').addEventListener('toggle', function(e) {
   </div>
 </footer>
 
+<script>
+const LANGS = {
+  en: {
+    nav_how: "How it works", nav_features: "Features", nav_install: "Install", nav_support: "Support",
+    badge: "Free · Open Source · Offline",
+    hero_sub: "Analyze any Bandcamp track — BPM, key, energy and genre.<br>Runs entirely on your Mac. No accounts. No data sent anywhere.",
+    btn_install: "↓ Install Free", btn_slides: "See how it works →",
+    feat_label: "What you get", feat_title: "Everything a DJ needs. Nothing else.",
+    f1_title: "BPM Detection", f1_desc: "Accurate tempo analysis using Essentia's multifeature algorithm. Same engine used by professional music analysis tools.",
+    f2_title: "Key + Camelot", f2_desc: "Musical key detection with Camelot Wheel notation. Know instantly which tracks mix harmonically.",
+    f3_title: "Energy", f3_desc: "Measure the intensity and density of a track. Build your set arc from intro to peak to closing.",
+    f4_title: "Danceability", f4_desc: "ML-powered score that predicts how much a track will move a crowd.",
+    f5_title: "Genre (Discogs)", f5_desc: "Genre classification using 400 Discogs categories — from Deep House to Dub Techno to Funk to Ambient.",
+    f6_title: "100% Offline", f6_desc: "Everything runs on your Mac. Audio is never uploaded. No API keys, no accounts, no tracking.",
+    how_label: "Setup", how_title: "Ready in 3 steps.",
+    s1_title: "Open Terminal", s1_desc: "Press <strong>⌘ Space</strong>, type <strong>Terminal</strong>, press Enter. Then paste the install command.",
+    s2_title: "Run the installer", s2_desc: "Paste the command — it installs everything. Takes ~2 minutes. After that, the server <strong>starts itself at every login.</strong>",
+    s3_title: "Add the bookmarklet", s3_desc: "Show your bookmarks bar with <strong>⌘ Shift B</strong>. Drag <strong>♫ BANDPULSE</strong> into it. Done.",
+    install_label: "Install", install_title: "Free. No account needed.",
+    step1_title: "Open Terminal on your Mac",
+    step1_desc: "Press <strong>⌘ Space</strong>, type <strong>Terminal</strong>, press Enter.<br>Then paste this command and press Enter:",
+    step1_note: "First time only — takes ~2 minutes. After that, the server starts automatically at every login. No Terminal needed.",
+    step2_title: "Show your bookmarks bar in Safari", step2_desc: "Press <strong>⌘ Shift B</strong> to show it if it's hidden.",
+    step3_title: "Drag this button into your bookmarks bar",
+    drag_hint: "← Drag this button into your bookmarks bar",
+    slides_label: "🎬 &nbsp;Prefer a visual guide? See step-by-step slides",
+    slides_desc: "Spotlight → Terminal → bookmarklet → Bandcamp panel. Everything shown on a real Mac mockup, step by step.",
+    slides_btn: "Open slides →",
+    privacy_title: "Your music stays on your Mac.",
+    privacy_text: "Bandpulse downloads a short audio preview directly from Bandcamp to your machine, analyzes it with local ML models, and deletes the file immediately after. No data is ever sent to external servers. No analytics, no telemetry.",
+    donate_title: "If it saved you time,<br>buy me a coffee.",
+    donate_sub: "Bandpulse is free and open source. If you find it useful, a small donation keeps development going.",
+    footer_copy: "© 2026 BANDPULSE — MIT License",
+  },
+  it: {
+    nav_how: "Come funziona", nav_features: "Funzionalità", nav_install: "Installa", nav_support: "Supporta",
+    badge: "Gratis · Open Source · Offline",
+    hero_sub: "Analizza qualsiasi traccia su Bandcamp — BPM, tonalità, energia e genere.<br>Gira interamente sul tuo Mac. Nessun account. Nessun dato inviato.",
+    btn_install: "↓ Installa Gratis", btn_slides: "Vedi come funziona →",
+    feat_label: "Cosa ottieni", feat_title: "Tutto quello che serve a un DJ. Nient'altro.",
+    f1_title: "BPM", f1_desc: "Rilevamento del tempo preciso con l'algoritmo multifeature di Essentia.",
+    f2_title: "Tonalità + Camelot", f2_desc: "Rilevamento della chiave musicale con notazione Camelot Wheel per il mix armonico.",
+    f3_title: "Energia", f3_desc: "Misura l'intensità della traccia. Costruisci l'arco del tuo set dall'intro al picco.",
+    f4_title: "Danceability", f4_desc: "Score ML che predice quanto una traccia farà muovere il pubblico.",
+    f5_title: "Genere (Discogs)", f5_desc: "400 categorie Discogs — da Deep House a Dub Techno, Funk, Ambient e molto altro.",
+    f6_title: "100% Offline", f6_desc: "Tutto gira sul tuo Mac. L'audio non viene mai caricato. Nessuna chiave API, nessun account.",
+    how_label: "Installazione", how_title: "Pronto in 3 passi.",
+    s1_title: "Apri il Terminale", s1_desc: "Premi <strong>⌘ Spazio</strong>, scrivi <strong>Terminale</strong>, premi Invio. Poi incolla il comando di installazione.",
+    s2_title: "Lancia l'installer", s2_desc: "Incolla il comando — installa tutto automaticamente. ~2 minuti. Poi il server <strong>si avvia da solo ad ogni login.</strong>",
+    s3_title: "Aggiungi il bookmarklet", s3_desc: "Mostra la barra dei preferiti con <strong>⌘ Shift B</strong>. Trascina <strong>♫ BANDPULSE</strong> dentro. Fatto.",
+    install_label: "Installazione", install_title: "Gratis. Nessun account.",
+    step1_title: "Apri il Terminale sul tuo Mac",
+    step1_desc: "Premi <strong>⌘ Spazio</strong>, scrivi <strong>Terminale</strong>, premi Invio.<br>Poi incolla questo comando e premi Invio:",
+    step1_note: "Solo la prima volta — ~2 minuti. Poi il server si avvia automaticamente ad ogni login. Niente Terminale.",
+    step2_title: "Mostra la barra dei preferiti in Safari", step2_desc: "Premi <strong>⌘ Shift B</strong> se è nascosta.",
+    step3_title: "Trascina questo pulsante nella barra dei preferiti",
+    drag_hint: "← Trascina nella barra dei preferiti",
+    slides_label: "🎬 &nbsp;Preferisci una guida visiva? Vedi le slide passo passo",
+    slides_desc: "Spotlight → Terminale → bookmarklet → pannello Bandcamp. Tutto mostrato su un Mac reale.",
+    slides_btn: "Apri le slide →",
+    privacy_title: "La tua musica resta sul tuo Mac.",
+    privacy_text: "Bandpulse scarica un'anteprima audio da Bandcamp, la analizza con modelli ML locali e cancella il file subito dopo. Nessun dato viene mai inviato a server esterni.",
+    donate_title: "Se ti ha fatto risparmiare tempo,<br>offrimi un caffè.",
+    donate_sub: "Bandpulse è gratis e open source. Se lo trovi utile, una piccola donazione aiuta lo sviluppo.",
+    footer_copy: "© 2026 BANDPULSE — Licenza MIT",
+  },
+  es: {
+    nav_how: "Cómo funciona", nav_features: "Funciones", nav_install: "Instalar", nav_support: "Apoyar",
+    badge: "Gratis · Open Source · Sin conexión",
+    hero_sub: "Analiza cualquier pista de Bandcamp — BPM, tonalidad, energía y género.<br>Funciona en tu Mac. Sin cuentas. Sin datos enviados.",
+    btn_install: "↓ Instalar Gratis", btn_slides: "Ver cómo funciona →",
+    feat_label: "Qué obtienes", feat_title: "Todo lo que un DJ necesita. Nada más.",
+    f1_title: "Detección de BPM", f1_desc: "Análisis de tempo preciso con el algoritmo multifunción de Essentia.",
+    f2_title: "Tonalidad + Camelot", f2_desc: "Detección de clave musical con notación Camelot Wheel para mezcla armónica.",
+    f3_title: "Energía", f3_desc: "Mide la intensidad de una pista. Construye tu set de intro a peak.",
+    f4_title: "Bailabilidad", f4_desc: "Puntuación ML que predice cuánto moverá una pista al público.",
+    f5_title: "Género (Discogs)", f5_desc: "400 categorías Discogs — Deep House, Dub Techno, Funk, Ambient y mucho más.",
+    f6_title: "100% Sin conexión", f6_desc: "Todo en tu Mac. El audio nunca se sube. Sin claves API, sin cuentas.",
+    how_label: "Instalación", how_title: "Listo en 3 pasos.",
+    s1_title: "Abre Terminal", s1_desc: "Pulsa <strong>⌘ Espacio</strong>, escribe <strong>Terminal</strong>, pulsa Enter. Luego pega el comando.",
+    s2_title: "Ejecuta el instalador", s2_desc: "Pega el comando — instala todo automáticamente. ~2 minutos. El servidor <strong>arranca solo en cada inicio.</strong>",
+    s3_title: "Añade el marcador", s3_desc: "Muestra la barra de marcadores con <strong>⌘ Shift B</strong>. Arrastra <strong>♫ BANDPULSE</strong>. Listo.",
+    install_label: "Instalación", install_title: "Gratis. Sin cuenta.",
+    step1_title: "Abre Terminal en tu Mac",
+    step1_desc: "Pulsa <strong>⌘ Espacio</strong>, escribe <strong>Terminal</strong>, pulsa Enter.<br>Luego pega este comando:",
+    step1_note: "Solo la primera vez — ~2 minutos. Después el servidor arranca automáticamente en cada inicio.",
+    step2_title: "Muestra la barra de marcadores en Safari", step2_desc: "Pulsa <strong>⌘ Shift B</strong> si está oculta.",
+    step3_title: "Arrastra este botón a la barra de marcadores",
+    drag_hint: "← Arrastra a la barra de marcadores",
+    slides_label: "🎬 &nbsp;¿Prefieres una guía visual? Ver diapositivas",
+    slides_desc: "Spotlight → Terminal → marcador → panel de Bandcamp. Todo mostrado en un Mac real.",
+    slides_btn: "Ver diapositivas →",
+    privacy_title: "Tu música se queda en tu Mac.",
+    privacy_text: "Bandpulse descarga una vista previa de Bandcamp, la analiza con modelos ML locales y elimina el archivo inmediatamente. Ningún dato se envía a servidores externos.",
+    donate_title: "Si te ahorró tiempo,<br>invítame a un café.",
+    donate_sub: "Bandpulse es gratis y open source. Una pequeña donación ayuda al desarrollo.",
+    footer_copy: "© 2026 BANDPULSE — Licencia MIT",
+  },
+  fr: {
+    nav_how: "Comment ça marche", nav_features: "Fonctionnalités", nav_install: "Installer", nav_support: "Soutenir",
+    badge: "Gratuit · Open Source · Hors ligne",
+    hero_sub: "Analysez n'importe quelle piste Bandcamp — BPM, tonalité, énergie et genre.<br>Fonctionne sur votre Mac. Sans compte. Aucune donnée envoyée.",
+    btn_install: "↓ Installer gratuitement", btn_slides: "Voir comment ça marche →",
+    feat_label: "Ce que vous obtenez", feat_title: "Tout ce dont un DJ a besoin. Rien de plus.",
+    f1_title: "Détection BPM", f1_desc: "Analyse précise du tempo avec l'algorithme multifeature d'Essentia.",
+    f2_title: "Tonalité + Camelot", f2_desc: "Détection de la clé musicale avec notation Camelot Wheel pour le mix harmonique.",
+    f3_title: "Énergie", f3_desc: "Mesurez l'intensité d'une piste. Construisez l'arc de votre set.",
+    f4_title: "Dansabilité", f4_desc: "Score ML qui prédit à quel point une piste fera bouger le public.",
+    f5_title: "Genre (Discogs)", f5_desc: "400 catégories Discogs — Deep House, Dub Techno, Funk, Ambient et bien plus.",
+    f6_title: "100% Hors ligne", f6_desc: "Tout fonctionne sur votre Mac. L'audio n'est jamais uploadé.",
+    how_label: "Installation", how_title: "Prêt en 3 étapes.",
+    s1_title: "Ouvrez Terminal", s1_desc: "Appuyez sur <strong>⌘ Espace</strong>, tapez <strong>Terminal</strong>, appuyez sur Entrée. Collez la commande.",
+    s2_title: "Lancez l'installateur", s2_desc: "Collez la commande — elle installe tout. ~2 minutes. Le serveur <strong>démarre seul à chaque connexion.</strong>",
+    s3_title: "Ajoutez le marque-page", s3_desc: "Affichez la barre avec <strong>⌘ Shift B</strong>. Glissez <strong>♫ BANDPULSE</strong> dedans. Terminé.",
+    install_label: "Installation", install_title: "Gratuit. Sans compte.",
+    step1_title: "Ouvrez Terminal sur votre Mac",
+    step1_desc: "Appuyez sur <strong>⌘ Espace</strong>, tapez <strong>Terminal</strong>, appuyez sur Entrée.<br>Collez cette commande :",
+    step1_note: "Première fois seulement — ~2 minutes. Ensuite le serveur démarre automatiquement à chaque connexion.",
+    step2_title: "Affichez la barre de marque-pages dans Safari", step2_desc: "Appuyez sur <strong>⌘ Shift B</strong> si elle est masquée.",
+    step3_title: "Glissez ce bouton dans la barre de marque-pages",
+    drag_hint: "← Glissez dans la barre de marque-pages",
+    slides_label: "🎬 &nbsp;Préférez un guide visuel ? Voir les diapositives",
+    slides_desc: "Spotlight → Terminal → marque-page → panneau Bandcamp. Tout montré sur un vrai Mac.",
+    slides_btn: "Voir les diapositives →",
+    privacy_title: "Votre musique reste sur votre Mac.",
+    privacy_text: "Bandpulse télécharge un aperçu audio de Bandcamp, l'analyse avec des modèles ML locaux et supprime le fichier immédiatement. Aucune donnée n'est envoyée à des serveurs externes.",
+    donate_title: "Si ça vous a fait gagner du temps,<br>offrez-moi un café.",
+    donate_sub: "Bandpulse est gratuit et open source. Un petit don aide au développement.",
+    footer_copy: "© 2026 BANDPULSE — Licence MIT",
+  },
+  de: {
+    nav_how: "Wie es funktioniert", nav_features: "Funktionen", nav_install: "Installieren", nav_support: "Unterstützen",
+    badge: "Kostenlos · Open Source · Offline",
+    hero_sub: "Analysiere jeden Bandcamp-Track — BPM, Tonart, Energie und Genre.<br>Läuft komplett auf deinem Mac. Kein Account. Keine Daten werden gesendet.",
+    btn_install: "↓ Kostenlos installieren", btn_slides: "So funktioniert es →",
+    feat_label: "Was du bekommst", feat_title: "Alles was ein DJ braucht. Nicht mehr.",
+    f1_title: "BPM-Erkennung", f1_desc: "Präzise Tempoanalyse mit Essentias Multifeature-Algorithmus.",
+    f2_title: "Tonart + Camelot", f2_desc: "Tonartserkennung mit Camelot-Wheel-Notation für harmonisches Mixen.",
+    f3_title: "Energie", f3_desc: "Miss die Intensität eines Tracks. Baue deinen Set-Arc von Intro bis Peak.",
+    f4_title: "Tanzbarkeit", f4_desc: "ML-Score, der vorhersagt, wie sehr ein Track die Menge bewegt.",
+    f5_title: "Genre (Discogs)", f5_desc: "400 Discogs-Kategorien — Deep House, Dub Techno, Funk, Ambient und mehr.",
+    f6_title: "100% Offline", f6_desc: "Alles läuft auf deinem Mac. Audio wird nie hochgeladen. Kein Account nötig.",
+    how_label: "Einrichtung", how_title: "In 3 Schritten bereit.",
+    s1_title: "Terminal öffnen", s1_desc: "Drücke <strong>⌘ Leertaste</strong>, tippe <strong>Terminal</strong>, drücke Enter. Dann den Befehl einfügen.",
+    s2_title: "Installer starten", s2_desc: "Befehl einfügen — installiert alles automatisch. ~2 Minuten. Der Server <strong>startet sich bei jedem Login selbst.</strong>",
+    s3_title: "Lesezeichen hinzufügen", s3_desc: "Zeige die Lesezeichenleiste mit <strong>⌘ Shift B</strong>. Ziehe <strong>♫ BANDPULSE</strong> hinein. Fertig.",
+    install_label: "Installation", install_title: "Kostenlos. Kein Account.",
+    step1_title: "Terminal auf deinem Mac öffnen",
+    step1_desc: "Drücke <strong>⌘ Leertaste</strong>, tippe <strong>Terminal</strong>, drücke Enter.<br>Dann diesen Befehl einfügen:",
+    step1_note: "Nur einmal — ~2 Minuten. Danach startet der Server automatisch bei jedem Login.",
+    step2_title: "Lesezeichenleiste in Safari anzeigen", step2_desc: "Drücke <strong>⌘ Shift B</strong> wenn sie ausgeblendet ist.",
+    step3_title: "Diesen Button in die Lesezeichenleiste ziehen",
+    drag_hint: "← In die Lesezeichenleiste ziehen",
+    slides_label: "🎬 &nbsp;Lieber eine visuelle Anleitung? Folien ansehen",
+    slides_desc: "Spotlight → Terminal → Lesezeichen → Bandcamp-Panel. Alles an einem echten Mac gezeigt.",
+    slides_btn: "Folien öffnen →",
+    privacy_title: "Deine Musik bleibt auf deinem Mac.",
+    privacy_text: "Bandpulse lädt eine kurze Audio-Vorschau von Bandcamp herunter, analysiert sie mit lokalen ML-Modellen und löscht die Datei sofort danach. Es werden keine Daten an externe Server gesendet.",
+    donate_title: "Wenn es dir Zeit gespart hat,<br>kauf mir einen Kaffee.",
+    donate_sub: "Bandpulse ist kostenlos und open source. Eine kleine Spende hilft der Entwicklung.",
+    footer_copy: "© 2026 BANDPULSE — MIT-Lizenz",
+  }
+};
+
+const I18N_MAP = {
+  nav_how:       '[data-i18n="nav_how"]',
+  nav_features:  '[data-i18n="nav_features"]',
+  nav_install:   '[data-i18n="nav_install"]',
+  nav_support:   '[data-i18n="nav_support"]',
+  badge:         '.hero-badge',
+  hero_sub:      '.hero-sub',
+  btn_install:   '.btn-primary',
+  btn_slides:    '.btn-secondary',
+  feat_label:    '#features .section-label',
+  feat_title:    '#features .section-title',
+  f1_title:      '.feature:nth-child(1) .feature-title',
+  f1_desc:       '.feature:nth-child(1) .feature-desc',
+  f2_title:      '.feature:nth-child(2) .feature-title',
+  f2_desc:       '.feature:nth-child(2) .feature-desc',
+  f3_title:      '.feature:nth-child(3) .feature-title',
+  f3_desc:       '.feature:nth-child(3) .feature-desc',
+  f4_title:      '.feature:nth-child(4) .feature-title',
+  f4_desc:       '.feature:nth-child(4) .feature-desc',
+  f5_title:      '.feature:nth-child(5) .feature-title',
+  f5_desc:       '.feature:nth-child(5) .feature-desc',
+  f6_title:      '.feature:nth-child(6) .feature-title',
+  f6_desc:       '.feature:nth-child(6) .feature-desc',
+  how_label:     '#how .section-label',
+  how_title:     '#how .section-title',
+  install_label: '#install .section-label',
+  install_title: '#install .section-title',
+  privacy_title: '.privacy-title',
+  privacy_text:  '.privacy-text',
+  donate_title:  '.donate-title',
+  donate_sub:    '.donate-sub',
+  footer_copy:   'footer span',
+};
+
+function setLang(code) {
+  const t = LANGS[code];
+  if (!t) return;
+  localStorage.setItem('bp_lang', code);
+  document.documentElement.lang = code;
+
+  for (const [key, sel] of Object.entries(I18N_MAP)) {
+    const el = document.querySelector(sel);
+    if (el && t[key] !== undefined) el.innerHTML = t[key];
+  }
+
+  // Steps (how it works)
+  const steps = document.querySelectorAll('.step');
+  if (steps[0]) { steps[0].querySelector('.step-title').textContent = t.s1_title; steps[0].querySelector('.step-desc').innerHTML = t.s1_desc; }
+  if (steps[1]) { steps[1].querySelector('.step-title').textContent = t.s2_title; steps[1].querySelector('.step-desc').innerHTML = t.s2_desc; }
+  if (steps[2]) { steps[2].querySelector('.step-title').textContent = t.s3_title; steps[2].querySelector('.step-desc').innerHTML = t.s3_desc; }
+
+  // Install steps
+  const iSteps = document.querySelectorAll('.install-step .install-text');
+  if (iSteps[0]) { iSteps[0].querySelector('strong').textContent = t.step1_title; }
+  if (iSteps[1]) { iSteps[1].querySelector('strong').textContent = t.step2_title; iSteps[1].innerHTML = '<strong>'+t.step2_title+'</strong><br>'+t.step1_desc.includes('⌘') ? iSteps[1].innerHTML : ''; }
+  if (iSteps[2]) iSteps[2].querySelector('strong').textContent = t.step3_title;
+
+  // Drag hint
+  const dh = document.querySelector('.drag-hint');
+  if (dh) dh.textContent = t.drag_hint;
+
+  // Accordion
+  const acc = document.querySelector('details summary span:first-child');
+  if (acc) acc.innerHTML = t.slides_label;
+  const accDesc = document.querySelector('details > div > div:first-child > div:last-child');
+  if (accDesc) accDesc.textContent = t.slides_desc;
+  const accBtn = document.querySelector('details > div > a');
+  if (accBtn) accBtn.textContent = t.slides_btn;
+
+  // Active button
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === code.toUpperCase());
+  });
+}
+
+// Auto-detect or restore
+const saved = localStorage.getItem('bp_lang');
+const browser = (navigator.language || 'en').slice(0,2).toLowerCase();
+const auto = ['en','it','es','fr','de'].includes(browser) ? browser : 'en';
+setLang(saved || auto);
+</script>
 </body>
 </html>
