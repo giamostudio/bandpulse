@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BANDPULSE — Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111;
+    --border: #1E1E1E;
+    --text: #F0EDE8;
+    --muted: #555;
+    --accent: #E8FF47;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #000;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 24px;
+  }
+
+  .controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .ctrl-btn {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #aaa;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .slide {
+    width: 1200px;
+    height: 675px;
+    background: var(--bg);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* SLIDE 1 — HERO */
+  .s1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--bg);
+  }
+
+  .s1::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(232,255,71,0.07) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .slide-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232,255,71,0.08);
+    border: 1px solid rgba(232,255,71,0.2);
+    color: var(--accent);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .pulse-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero-title {
+    font-size: 110px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -4px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .hero-title .y { color: var(--accent); }
+
+  .hero-wordmark {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    position: relative;
+    margin-top: 24px;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 300;
+    position: relative;
+    margin-top: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  /* SLIDE 2 — PROBLEM */
+  .s2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .s2-left {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .s2-right {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--surface);
+  }
+
+  .slide-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .big-text {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .body-text {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .check-list {
+    list-style: none;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .check-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .check-list .icon {
+    width: 28px; height: 28px;
+    background: rgba(232,255,71,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* SLIDE 3 — FEATURES */
+  .s3 {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 80px;
+  }
+
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 40px;
+    flex: 1;
+  }
+
+  .feat {
+    background: var(--bg);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feat-emoji { font-size: 28px; }
+
+  .feat-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .feat-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .feat-val {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -1px;
+    margin-top: auto;
+  }
+
+  /* SLIDE 4 — MAC MOCKUP */
+  .s4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 24px;
+    background: var(--bg);
+  }
+
+  .s4::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(232,255,71,0.05) 0%, transparent 70%);
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mac-browser {
+    width: 900px;
+    background: #161616;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    position: relative;
+  }
+
+  .mac-titlebar {
+    background: #0D0D0D;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .mac-dot { width: 11px; height: 11px; border-radius: 50%; }
+
+  .mac-url {
+    margin-left: 12px;
+    background: #1a1a1a;
+    border-radius: 6px;
+    padding: 4px 16px;
+    font-size: 11px;
+    color: #555;
+    flex: 1;
+    max-width: 300px;
+  }
+
+  .mac-logo-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .mac-logo-text {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+
+  .mac-artist { font-size: 12px; color: #555; }
+
+  .mac-analyze-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .mac-table-header {
+    display: grid;
+    grid-template-columns: 36px 1fr 90px 130px 180px 80px;
+    padding: 8px 20px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .mac-th {
+    font-size: 9px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  .mac-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 90px 130px 180px 80px;
+    padding: 11px 20px;
+    border-bottom: 1px solid #141414;
+    align-items: center;
+  }
+
+  .mac-row.active { background: #141414; }
+
+  .mac-num { font-size: 11px; color: #3a3a3a; }
+  .mac-title { font-size: 12px; font-weight: 500; }
+
+  .mac-bpm {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .mac-bpm .u { font-size: 9px; color: #444; font-weight: 400; }
+
+  .mac-key { font-size: 11px; }
+  .mac-cam {
+    display: inline-block;
+    background: rgba(232,255,71,0.1);
+    color: var(--accent);
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 5px;
+  }
+  .mac-kname { color: #555; font-size: 10px; }
+
+  .mac-mini-bar { display: flex; flex-direction: column; gap: 3px; }
+  .mac-bar-row { display: flex; align-items: center; gap: 5px; }
+  .mac-blabel { font-size: 8px; color: #3a3a3a; width: 18px; text-transform: uppercase; }
+  .mac-bbg { flex: 1; height: 2.5px; background: #222; border-radius: 2px; overflow: hidden; }
+  .mac-bfill { height: 100%; border-radius: 2px; }
+  .e-fill { background: linear-gradient(90deg, #7B2FFF, #FF4D4D); }
+  .d-fill { background: linear-gradient(90deg, #FF8C00, #E8FF47); }
+
+  .mac-genre {
+    background: #1a1a1a;
+    color: #666;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .mac-done {
+    background: rgba(71,255,138,0.08);
+    color: #47FF8A;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .mac-btn-sm {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #aaa;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  /* SLIDE 5 — CTA */
+  .s5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .s5::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,255,71,0.06) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .s5-title {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -2.5px;
+    line-height: 1;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .s5-url {
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+    margin-bottom: 48px;
+  }
+
+  .s5-tags {
+    display: flex;
+    gap: 12px;
+    position: relative;
+  }
+
+  .s5-tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .slide-num {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    font-size: 11px;
+    color: #2a2a2a;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .download-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 32px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="ctrl-btn" onclick="window.print()">🖨 Print / Export PDF</button>
+  <button class="ctrl-btn" onclick="document.querySelectorAll('.slide').forEach((s,i)=>{ s.style.display = prompt('Show slide (1-5) or all:') == String(i+1) ? 'flex':'none' })">Focus slide</button>
+</div>
+
+<!-- SLIDE 1 — HERO -->
+<div class="slide s1">
+  <div class="slide-badge"><span class="pulse-dot"></span> Free · Open Source · Safari</div>
+  <div class="hero-title">BPM.<br><span class="y">MOOD.</span></div>
+  <div class="hero-wordmark">BANDPULSE</div>
+  <div class="hero-sub">BPM & Mood Analyzer for Bandcamp — runs on your Mac</div>
+  <div class="slide-num">01 / 05</div>
+</div>
+
+<!-- SLIDE 2 — PROBLEM / SOLUTION -->
+<div class="slide s2">
+  <div class="s2-left">
+    <div class="slide-label">The problem</div>
+    <div class="big-text">You're on Bandcamp.<br>You need BPM.<br>Now.</div>
+    <div class="body-text">No native BPM info. Tunebat is slow, inaccurate, and tracks your data. You're wasting time on tracks that won't fit your set.</div>
+  </div>
+  <div class="s2-right">
+    <div class="slide-label">The solution</div>
+    <ul class="check-list">
+      <li><span class="icon">🥁</span> Instant BPM detection — any Bandcamp track</li>
+      <li><span class="icon">🎵</span> Key + Camelot Wheel for harmonic mixing</li>
+      <li><span class="icon">⚡</span> Energy & Danceability score</li>
+      <li><span class="icon">🎛</span> Genre from 400 Discogs categories</li>
+      <li><span class="icon">🔒</span> 100% offline — no data leaves your Mac</li>
+    </ul>
+  </div>
+  <div class="slide-num">02 / 05</div>
+</div>
+
+<!-- SLIDE 3 — FEATURES -->
+<div class="slide s3">
+  <div class="slide-label">What you get</div>
+  <div style="font-size:38px;font-weight:800;letter-spacing:-1px">Everything a DJ needs.</div>
+  <div class="feat-grid">
+    <div class="feat">
+      <div class="feat-emoji">🥁</div>
+      <div class="feat-name">BPM</div>
+      <div class="feat-desc">Multifeature rhythm extraction via Essentia</div>
+      <div class="feat-val">128.4</div>
+    </div>
+    <div class="feat">
+      <div class="feat-emoji">🎵</div>
+      <div class="feat-name">Key + Camelot</div>
+      <div class="feat-desc">Harmonic mixing made instant</div>
+      <div class="feat-val" style="font-size:22px">6A · G minor</div>
+    </div>
+    <div class="feat">
+      <div class="feat-emoji">⚡</div>
+      <div class="feat-name">Energy</div>
+      <div class="feat-desc">Track intensity from 0 to 100%</div>
+      <div class="feat-val">84%</div>
+    </div>
+    <div class="feat">
+      <div class="feat-emoji">💃</div>
+      <div class="feat-name">Danceability</div>
+      <div class="feat-desc">ML model — will it move the floor?</div>
+      <div class="feat-val">91%</div>
+    </div>
+    <div class="feat">
+      <div class="feat-emoji">🎛</div>
+      <div class="feat-name">Genre</div>
+      <div class="feat-desc">400 Discogs categories, classified locally</div>
+      <div class="feat-val" style="font-size:18px">Tech House</div>
+    </div>
+    <div class="feat">
+      <div class="feat-emoji">🔒</div>
+      <div class="feat-name">Offline</div>
+      <div class="feat-desc">Essentia ML models run on your Mac only</div>
+      <div class="feat-val" style="font-size:18px">0 servers</div>
+    </div>
+  </div>
+  <div class="slide-num">03 / 05</div>
+</div>
+
+<!-- SLIDE 4 — MAC MOCKUP -->
+<div class="slide s4">
+  <div class="slide-label" style="position:relative;text-align:center">Live on any Bandcamp album page</div>
+  <div class="mac-browser">
+    <div class="mac-titlebar">
+      <div class="mac-dot" style="background:#FF5F57"></div>
+      <div class="mac-dot" style="background:#FFBD2E"></div>
+      <div class="mac-dot" style="background:#28CA42"></div>
+      <div class="mac-url">127.0.0.1:5555/album</div>
+      <div style="margin-left:auto;font-size:11px;color:#333">BANDPULSE v1.0</div>
+    </div>
+    <div class="mac-logo-bar">
+      <div class="mac-logo-text">BANDPULSE</div>
+      <div class="mac-artist">Va Fan Fa / Various Artists</div>
+      <button class="mac-analyze-btn">▶ ANALYZE ALL</button>
+    </div>
+    <div class="mac-table-header">
+      <div class="mac-th">#</div>
+      <div class="mac-th">Track</div>
+      <div class="mac-th">BPM</div>
+      <div class="mac-th">Key</div>
+      <div class="mac-th">Energy / Dance</div>
+      <div class="mac-th"></div>
+    </div>
+
+    <div class="mac-row">
+      <div class="mac-num">1</div>
+      <div class="mac-title">BADEO - Facade (Original Mix)</div>
+      <div class="mac-bpm">126<span class="u"> BPM</span></div>
+      <div class="mac-key"><span class="mac-cam">6A</span><span class="mac-kname">G minor</span></div>
+      <div class="mac-mini-bar">
+        <div class="mac-bar-row"><span class="mac-blabel">NRG</span><div class="mac-bbg"><div class="mac-bfill e-fill" style="width:78%"></div></div></div>
+        <div class="mac-bar-row"><span class="mac-blabel">DNC</span><div class="mac-bbg"><div class="mac-bfill d-fill" style="width:82%"></div></div></div>
+      </div>
+      <div class="mac-done">✓ Done</div>
+    </div>
+
+    <div class="mac-row active">
+      <div class="mac-num" style="color:var(--accent)">2</div>
+      <div class="mac-title">Malin Genie - Come The Morning (Remix)</div>
+      <div class="mac-bpm">128<span class="u"> BPM</span></div>
+      <div class="mac-key"><span class="mac-cam">10A</span><span class="mac-kname">B minor</span></div>
+      <div class="mac-mini-bar">
+        <div class="mac-bar-row"><span class="mac-blabel">NRG</span><div class="mac-bbg"><div class="mac-bfill e-fill" style="width:85%"></div></div></div>
+        <div class="mac-bar-row"><span class="mac-blabel">DNC</span><div class="mac-bbg"><div class="mac-bfill d-fill" style="width:90%"></div></div></div>
+      </div>
+      <div class="mac-done">✓ Done</div>
+    </div>
+
+    <div class="mac-row">
+      <div class="mac-num">3</div>
+      <div class="mac-title">Nick Beringer - Here And There</div>
+      <div class="mac-bpm" style="color:#333">—</div>
+      <div class="mac-key" style="color:#333">—</div>
+      <div class="mac-mini-bar"></div>
+      <div class="mac-btn-sm">Analyze</div>
+    </div>
+
+    <div class="mac-row">
+      <div class="mac-num">4</div>
+      <div class="mac-title">R.Y. feat A.C. - Move Dub</div>
+      <div class="mac-bpm" style="color:#333">—</div>
+      <div class="mac-key" style="color:#333">—</div>
+      <div class="mac-mini-bar"></div>
+      <div class="mac-btn-sm">Analyze</div>
+    </div>
+  </div>
+  <div class="slide-num" style="color:#2a2a2a">04 / 05</div>
+</div>
+
+<!-- SLIDE 5 — CTA -->
+<div class="slide s5">
+  <div class="s5-title">Free.<br>Offline.<br><span style="color:var(--accent)">Open.</span></div>
+  <div class="s5-url">giamostudio.github.io/bandpulse</div>
+  <div class="s5-tags">
+    <div class="s5-tag">Safari</div>
+    <div class="s5-tag">macOS</div>
+    <div class="s5-tag">Essentia ML</div>
+    <div class="s5-tag">No account</div>
+    <div class="s5-tag">MIT License</div>
+  </div>
+  <div class="slide-num">05 / 05</div>
+</div>
+
+</body>
+</html>
