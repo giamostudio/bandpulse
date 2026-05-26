@@ -745,8 +745,31 @@
         <div class="drag-hint">← Drag this button into your bookmarks bar</div>
       </div>
     </div>
+
+    <!-- ACCORDION -->
+    <details style="margin-top:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <summary style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;cursor:pointer;list-style:none;background:var(--surface);font-size:14px;font-weight:600;color:var(--text);user-select:none">
+        <span>🎬 &nbsp;Prefer a visual guide? See step-by-step slides</span>
+        <span style="color:var(--accent);font-size:18px;transition:transform .2s" class="acc-arrow">↓</span>
+      </summary>
+      <div style="padding:28px 24px;background:var(--bg);display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:8px">5 slides, 2 minutes</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7">Spotlight → Terminal → bookmarklet → Bandcamp panel. Everything shown on a real Mac mockup, step by step.</div>
+        </div>
+        <a href="slides.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#000;padding:14px 28px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0">
+          Open slides →
+        </a>
+      </div>
+    </details>
   </div>
 </section>
+
+<script>
+document.querySelector('details').addEventListener('toggle', function(e) {
+  this.querySelector('.acc-arrow').style.transform = this.open ? 'rotate(180deg)' : 'rotate(0deg)';
+});
+</script>
 
 <!-- DONATE -->
 <section class="donate-section" id="donate">
