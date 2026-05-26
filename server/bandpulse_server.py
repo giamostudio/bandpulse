@@ -455,6 +455,10 @@ def album():
   .status-error {{ background: rgba(255,77,77,0.1); color: var(--red); }}
   .status-queue {{ background: var(--border); color: var(--muted); }}
 
+  .loading-dots {{
+    display: inline-block;
+    min-width: 90px;
+  }}
   .loading-dots::after {{
     content: '';
     animation: dots 1.2s steps(3, end) infinite;
