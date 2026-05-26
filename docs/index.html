@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BANDPULSE — BPM & Mood Analyzer for Bandcamp</title>
+<meta name="description" content="Analyze BPM, key, energy and genre of any Bandcamp track. Runs locally on your Mac. No data leaves your machine. Free and open source.">
+<meta property="og:title" content="BANDPULSE — BPM & Mood Analyzer for Bandcamp">
+<meta property="og:description" content="Analyze BPM, key, energy and genre of any Bandcamp track. Runs locally on your Mac. Free.">
+<meta property="og:image" content="og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111111;
+    --border: #1E1E1E;
+    --text: #F0EDE8;
+    --muted: #666;
+    --accent: #E8FF47;
+    --accent-dim: rgba(232,255,71,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000 !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+  }
+  .nav-cta:hover { opacity: 0.9; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(232,255,71,0.06) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(232,255,71,0.2);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-size: clamp(52px, 8vw, 100px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  h1 .accent { color: var(--accent); }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 560px;
+    margin: 24px auto 48px;
+    letter-spacing: 0.2px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #000;
+    padding: 16px 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,255,71,0.25); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    padding: 16px 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--muted); }
+
+  /* DEMO CARD */
+  .demo-wrap {
+    padding: 80px 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .demo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .demo-bar {
+    background: #0D0D0D;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .demo-title {
+    margin-left: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .demo-track {
+    display: grid;
+    grid-template-columns: 32px 1fr 90px 120px 1fr 80px;
+    gap: 0;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-track:last-child { border-bottom: none; }
+
+  .demo-num { color: var(--muted); font-size: 11px; }
+
+  .demo-name { font-size: 13px; font-weight: 500; padding: 0 12px; }
+
+  .demo-bpm {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -1px;
+  }
+  .demo-bpm .unit { font-size: 10px; font-weight: 400; color: var(--muted); }
+
+  .demo-key { padding: 0 12px; }
+
+  .cam { display: inline-block; background: var(--accent-dim); color: var(--accent);
+         border: 1px solid rgba(232,255,71,0.25); padding: 2px 8px; border-radius: 3px;
+         font-size: 11px; font-weight: 700; margin-right: 6px; }
+
+  .kname { font-size: 11px; color: var(--muted); }
+
+  .demo-bars { padding: 0 8px; }
+
+  .mini-bar-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .mini-label { font-size: 9px; color: var(--muted); width: 20px; text-transform: uppercase; letter-spacing: 1px; }
+  .mini-bg { flex: 1; height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+  .mini-fill { height: 100%; border-radius: 2px; }
+  .fill-e { background: linear-gradient(90deg, #7B2FFF, #FF4D4D); }
+  .fill-d { background: linear-gradient(90deg, #FF8C00, #E8FF47); }
+
+  .demo-genre {
+    background: #1A1A1A;
+    color: #999;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* FEATURES */
+  .section {
+    padding: 100px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 64px;
+    color: var(--text);
+    max-width: 600px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .feature {
+    background: var(--bg);
+    padding: 36px 32px;
+    transition: background 0.2s;
+  }
+  .feature:hover { background: var(--surface); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .feature-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    counter-reset: steps;
+  }
+
+  .step {
+    counter-increment: steps;
+    position: relative;
+    padding-top: 56px;
+  }
+
+  .step::before {
+    content: counter(steps, decimal-leading-zero);
+    position: absolute;
+    top: 0; left: 0;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--border);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .step-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .step-desc code {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: 'SF Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* PRIVACY */
+  .privacy-block {
+    background: var(--accent-dim);
+    border: 1px solid rgba(232,255,71,0.15);
+    border-radius: 10px;
+    padding: 48px;
+    display: flex;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .privacy-icon { font-size: 48px; flex-shrink: 0; }
+
+  .privacy-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+
+  .privacy-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* DONATE */
+  .donate-section {
+    text-align: center;
+    padding: 100px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .donate-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .donate-sub { font-size: 15px; color: var(--muted); margin-bottom: 40px; }
+
+  .kofi-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #FF5E5B;
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .kofi-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,94,91,0.3); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  .footer-links { display: flex; gap: 24px; }
+
+  /* BOOKMARKLET BOX */
+  .install-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 40px;
+    margin-top: 48px;
+    text-align: left;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .install-step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  .install-step:last-child { margin-bottom: 0; }
+
+  .install-num {
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .install-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .install-text strong { color: var(--text); }
+
+  .bookmarklet-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: grab;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .bookmarklet-btn:hover { transform: translateY(-1px); }
+
+  .drag-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .privacy-block { flex-direction: column; text-align: center; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Bandpulse</a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="https://github.com/yourusername/bandpulse" target="_blank">GitHub</a></li>
+    <li><a href="#donate" class="nav-cta">Support</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Free · Open Source · Offline
+  </div>
+  <h1>BPM. Key.<br><span class="accent">Mood.</span></h1>
+  <p class="hero-sub">
+    Analyze any Bandcamp track — BPM, key, energy and genre.<br>
+    Runs entirely on your Mac. No accounts. No data sent anywhere.
+  </p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-primary">
+      ↓ Install Free
+    </a>
+    <a href="https://github.com/yourusername/bandpulse" class="btn-secondary" target="_blank">
+      View on GitHub
+    </a>
+  </div>
+</section>
+
+<!-- DEMO -->
+<div class="demo-wrap">
+  <div class="demo-card">
+    <div class="demo-bar">
+      <div class="demo-dot" style="background:#FF5F57"></div>
+      <div class="demo-dot" style="background:#FFBD2E"></div>
+      <div class="demo-dot" style="background:#28CA42"></div>
+      <span class="demo-title">BANDPULSE — Va Fan Fa / Various Artists</span>
+    </div>
+
+    <div class="demo-track">
+      <div class="demo-num">1</div>
+      <div class="demo-name">BADEO - Facade (Original Mix)</div>
+      <div class="demo-bpm">126<span class="unit"> BPM</span></div>
+      <div class="demo-key"><span class="cam">6A</span><span class="kname">G minor</span></div>
+      <div class="demo-bars">
+        <div class="mini-bar-wrap"><span class="mini-label">NRG</span><div class="mini-bg"><div class="mini-fill fill-e" style="width:78%"></div></div></div>
+        <div class="mini-bar-wrap"><span class="mini-label">DNC</span><div class="mini-bg"><div class="mini-fill fill-d" style="width:82%"></div></div></div>
+      </div>
+      <div class="demo-genre">Tech House</div>
+    </div>
+
+    <div class="demo-track">
+      <div class="demo-num">2</div>
+      <div class="demo-name">Laughing Man & Viktor Udvari - Shades</div>
+      <div class="demo-bpm">122<span class="unit"> BPM</span></div>
+      <div class="demo-key"><span class="cam">8B</span><span class="kname">C major</span></div>
+      <div class="demo-bars">
+        <div class="mini-bar-wrap"><span class="mini-label">NRG</span><div class="mini-bg"><div class="mini-fill fill-e" style="width:65%"></div></div></div>
+        <div class="mini-bar-wrap"><span class="mini-label">DNC</span><div class="mini-bg"><div class="mini-fill fill-d" style="width:71%"></div></div></div>
+      </div>
+      <div class="demo-genre">Deep House</div>
+    </div>
+
+    <div class="demo-track" style="background:var(--surface)">
+      <div class="demo-num" style="color:var(--accent)">3</div>
+      <div class="demo-name">Malin Genie & Selidos - Come The Morning</div>
+      <div class="demo-bpm" style="animation:none">128<span class="unit"> BPM</span></div>
+      <div class="demo-key"><span class="cam">10A</span><span class="kname">B minor</span></div>
+      <div class="demo-bars">
+        <div class="mini-bar-wrap"><span class="mini-label">NRG</span><div class="mini-bg"><div class="mini-fill fill-e" style="width:85%"></div></div></div>
+        <div class="mini-bar-wrap"><span class="mini-label">DNC</span><div class="mini-bg"><div class="mini-fill fill-d" style="width:90%"></div></div></div>
+      </div>
+      <div class="demo-genre">Techno</div>
+    </div>
+
+    <div class="demo-track">
+      <div class="demo-num">4</div>
+      <div class="demo-name">Nick Beringer - Here And There</div>
+      <div class="demo-bpm">118<span class="unit"> BPM</span></div>
+      <div class="demo-key"><span class="cam">4A</span><span class="kname">F minor</span></div>
+      <div class="demo-bars">
+        <div class="mini-bar-wrap"><span class="mini-label">NRG</span><div class="mini-bg"><div class="mini-fill fill-e" style="width:55%"></div></div></div>
+        <div class="mini-bar-wrap"><span class="mini-label">DNC</span><div class="mini-bg"><div class="mini-fill fill-d" style="width:60%"></div></div></div>
+      </div>
+      <div class="demo-genre">Ambient</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">What you get</div>
+  <div class="section-title">Everything a DJ needs. Nothing else.</div>
+  <div class="features-grid">
+    <div class="feature">
+      <span class="feature-icon">🥁</span>
+      <div class="feature-title">BPM Detection</div>
+      <div class="feature-desc">Accurate tempo analysis using Essentia's multifeature algorithm. Same engine used by professional music analysis tools.</div>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🎵</span>
+      <div class="feature-title">Key + Camelot</div>
+      <div class="feature-desc">Musical key detection with Camelot Wheel notation. Know instantly which tracks mix harmonically.</div>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-title">Energy</div>
+      <div class="feature-desc">Measure the intensity and density of a track. Build your set arc from intro to peak to closing.</div>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">💃</span>
+      <div class="feature-title">Danceability</div>
+      <div class="feature-desc">ML-powered score that predicts how much a track will move a crowd. Powered by MSD danceability model.</div>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🎛</span>
+      <div class="feature-title">Genre (Discogs)</div>
+      <div class="feature-desc">Genre classification using 400 Discogs categories — from Deep House to Dub Techno to Funk to Ambient.</div>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🔒</span>
+      <div class="feature-title">100% Offline</div>
+      <div class="feature-desc">Everything runs on your Mac. Audio is never uploaded. No API keys, no accounts, no tracking.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how" style="padding-top:0">
+  <div class="section-label">Setup</div>
+  <div class="section-title">Ready in 3 steps.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-title">Start the server</div>
+      <div class="step-desc">
+        Run once in Terminal and leave it open.<br><br>
+        <code>~/lupin_env/bin/python ~/bandpulse_server.py</code><br><br>
+        The server runs locally at <code>localhost:5555</code> — nothing is exposed online.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-title">Add the bookmarklet</div>
+      <div class="step-desc">
+        Show your bookmarks bar with <code>⌘ Shift B</code>, then drag the <strong>BANDPULSE</strong> button from this page into it. Takes 10 seconds.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-title">Analyze on Bandcamp</div>
+      <div class="step-desc">
+        Open any Bandcamp album or track page. Click the <strong>BANDPULSE</strong> bookmarklet. A panel opens showing every track with BPM, key, energy and genre. Analyze one or all.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section style="padding: 0 24px 100px; max-width: 1100px; margin: 0 auto;">
+  <div class="privacy-block">
+    <div class="privacy-icon">🛡</div>
+    <div>
+      <div class="privacy-title">Your music stays on your Mac.</div>
+      <div class="privacy-text">
+        Bandpulse downloads a short audio preview directly from Bandcamp to your machine, analyzes it with local ML models, and deletes the file immediately after. No data is ever sent to external servers. No analytics, no telemetry. The source code is open — verify it yourself.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="section" id="install" style="padding-top:0">
+  <div class="section-label">Install</div>
+  <div class="section-title">Free. No account needed.</div>
+
+  <div class="install-box">
+    <div class="install-step">
+      <div class="install-num">1</div>
+      <div class="install-text">
+        <strong>Download and run the server</strong><br>
+        Clone the repo or download <code>bandpulse_server.py</code> from GitHub. Run it once:<br>
+        <code style="display:inline-block;margin-top:8px;background:#0D0D0D;border:1px solid #222;padding:8px 14px;border-radius:4px;font-family:monospace;font-size:12px;color:#E8FF47">~/lupin_env/bin/python bandpulse_server.py</code>
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="install-num">2</div>
+      <div class="install-text">
+        <strong>Show your bookmarks bar in Safari</strong><br>
+        Press <strong>⌘ Shift B</strong> to show it if it's hidden.
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="install-num">3</div>
+      <div class="install-text">
+        <strong>Drag this button into your bookmarks bar</strong><br>
+        <a class="bookmarklet-btn" href="javascript:(function(){function getData(){try{var el=document.querySelector('[data-tralbum]');return el?JSON.parse(el.getAttribute('data-tralbum')):null}catch(e){return null}}var data=getData();if(!data||!data.trackinfo){alert('No Bandcamp track data found on this page');return}var artist=encodeURIComponent(data.artist||document.title||'');var tracks=data.trackinfo.map(function(t){var f=t.file||{};return{title:t.title||'',url:f['mp3-128']||f['mp3-v0']||Object.values(f)[0]||'',bpm:t.bpm||''};});var b64=btoa(unescape(encodeURIComponent(JSON.stringify(tracks)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');window.open('http://127.0.0.1:5555/album?artist='+artist+'&data='+b64,'_blank','width=740,height=520');})();">
+          ♫ BANDPULSE
+        </a>
+        <div class="drag-hint">← Drag this button into your bookmarks bar</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DONATE -->
+<section class="donate-section" id="donate">
+  <div class="donate-title">If it saved you time,<br>buy me a coffee.</div>
+  <div class="donate-sub">Bandpulse is free and open source. If you find it useful, a small donation keeps development going.</div>
+  <a class="kofi-btn" href="https://ko-fi.com/yourusername" target="_blank">
+    ☕ Support on Ko-fi
+  </a>
+</section>
+
+<footer>
+  <span>© 2026 BANDPULSE — MIT License</span>
+  <div class="footer-links">
+    <a href="https://github.com/yourusername/bandpulse" target="_blank">GitHub</a>
+    <a href="https://ko-fi.com/yourusername" target="_blank">Ko-fi</a>
+    <a href="mailto:your@email.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

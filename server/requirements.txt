@@ -1,0 +1,5 @@
+essentia
+essentia-tensorflow
+flask
+requests
+numpy
