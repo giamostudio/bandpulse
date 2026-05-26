@@ -9,8 +9,16 @@ import tempfile, os, requests as req_lib, threading, json, base64
 app = Flask(__name__)
 _lock = threading.Lock()
 _es = None
-
 MODELS_DIR = os.path.expanduser("~/bandpulse_models")
+
+# Detect engine at startup
+try:
+    import essentia.standard as _essentia_test
+    USE_ESSENTIA = True
+    print("  Engine: Essentia (full analysis)")
+except Exception:
+    USE_ESSENTIA = False
+    print("  Engine: librosa (BPM + Key)")
 
 def get_es():
     global _es
@@ -19,7 +27,36 @@ def get_es():
         _es = es
     return _es
 
+PITCH_CLASSES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
+MAJOR_PROFILE = [6.35,2.23,3.48,2.33,4.38,4.09,2.52,5.19,2.39,3.66,2.29,2.88]
+MINOR_PROFILE = [6.33,2.68,3.52,5.38,2.60,3.53,2.54,4.75,3.98,2.69,3.34,3.17]
+
+def librosa_analyze(path):
+    import librosa, numpy as np
+    y, sr = librosa.load(path, sr=None, mono=True)
+    tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
+    bpm = round(float(np.atleast_1d(tempo)[0]), 1)
+    chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
+    chroma_mean = np.mean(chroma, axis=1)
+    best_score, best_key = -1, "C major"
+    for i in range(12):
+        r = np.roll(chroma_mean, -i)
+        maj = float(np.corrcoef(r, MAJOR_PROFILE)[0,1])
+        mn  = float(np.corrcoef(r, MINOR_PROFILE)[0,1])
+        if maj > best_score: best_score, best_key = maj, f"{PITCH_CLASSES[i]} major"
+        if mn  > best_score: best_score, best_key = mn,  f"{PITCH_CLASSES[i]} minor"
+    rms = float(np.sqrt(np.mean(y**2)))
+    energy = min(100, round(rms * 3000))
+    return bpm, best_key, energy
+
 def analyze_audio(path):
+    if not USE_ESSENTIA:
+        bpm, key_str, energy = librosa_analyze(path)
+        scale = "major" if "major" in key_str else "minor"
+        key = key_str.replace(" major","").replace(" minor","")
+        return {"bpm": bpm, "key": key_str, "camelot": to_camelot(key_str),
+                "energy": energy, "danceability": None, "genre": None, "genre_discogs": None}
+
     es = get_es()
     audio_44k = es.MonoLoader(filename=path, sampleRate=44100)()
     audio_16k = es.MonoLoader(filename=path, sampleRate=16000)()

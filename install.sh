@@ -36,7 +36,7 @@ $PY -m venv "$INSTALL_DIR/env"
 
 echo "→ Installing dependencies (this takes ~2 minutes)..."
 "$INSTALL_DIR/env/bin/pip" install --quiet --upgrade pip
-"$INSTALL_DIR/env/bin/pip" install --quiet essentia-tensorflow flask requests numpy
+"$INSTALL_DIR/env/bin/pip" install --quiet essentia-tensorflow flask requests numpy librosa
 
 echo "→ Downloading ML models (19MB)..."
 curl -fsSL -o /tmp/bandpulse_models.zip \
